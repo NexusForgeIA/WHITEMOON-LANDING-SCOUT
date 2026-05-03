@@ -226,11 +226,37 @@ footer{padding:40px 24px;border-top:1px solid var(--border2)}
     <a href="#features">Funciones</a>
     <a href="#plans">Planes</a>
     <a href="#how">Cómo funciona</a>
-    <a href="https://scout.whitemoon.es/" target="_blank">Entrar</a>
   </div>
   <a href="#plans" class="nav-cta">Solicitar acceso</a>
 </nav>
 
+
+<!-- URGENCY BANNER -->
+<div id="urgency-bar">
+  <div id="urgency-inner">
+    <div id="urgency-icon">
+      <svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </div>
+    <span id="urgency-text">
+      <b>Funcas:</b> La IA destruirá entre 1,7 y 2,3 millones de empleos en España en la próxima década.
+      <a href="https://www.funcas.es/prensa/la-ia-destruira-entre-17-y-23-millones-de-empleos-en-espana-en-la-proxima-decada/" target="_blank" id="urgency-link">Las agencias que vendan IA hoy dominarán el mercado →</a>
+    </span>
+    <button onclick="document.getElementById('urgency-bar').style.display='none'" id="urgency-close">✕</button>
+  </div>
+</div>
+
+<style>
+#urgency-bar{background:linear-gradient(90deg,rgba(124,58,237,.15),rgba(232,121,249,.08),rgba(124,58,237,.15));border-bottom:1px solid rgba(139,92,246,.25);padding:10px 20px;position:relative;z-index:99}
+#urgency-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:10px;justify-content:center}
+#urgency-icon{color:#a78bfa;flex-shrink:0}
+#urgency-text{font-size:.75rem;color:#c4b5fd;text-align:center;line-height:1.5}
+#urgency-text b{color:#fff}
+#urgency-link{color:#e879f9;text-decoration:none;font-weight:600;margin-left:6px;white-space:nowrap}
+#urgency-link:hover{text-decoration:underline}
+#urgency-close{background:none;border:none;color:#6d28d9;cursor:pointer;font-size:.8rem;flex-shrink:0;padding:2px 6px;border-radius:4px;transition:color .2s}
+#urgency-close:hover{color:#a78bfa}
+@media(max-width:600px){#urgency-text{font-size:.68rem}#urgency-link{display:block;margin:3px 0 0}}
+</style>
 <!-- HERO -->
 <div class="hero">
   <div class="orb1"></div>
@@ -356,9 +382,9 @@ footer{padding:40px 24px;border-top:1px solid var(--border2)}
       </div>
       <div class="feat-card">
         <div class="feat-ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
-        <div class="feat-title">Generador de webs demo</div>
-        <div class="feat-desc">Genera una web demo completamente personalizada con el nombre, teléfono y servicios reales del negocio. 9 sectores con diseños específicos. Descarga instantánea.</div>
-        <span class="feat-tag">Sin API · Instantáneo</span>
+        <div class="feat-title">Generador de webs demo + chatbot</div>
+        <div class="feat-desc">Genera una web demo completamente personalizada con el nombre, teléfono y servicios reales del negocio, con chatbot IA integrado. 9 sectores con diseños específicos. Descarga instantánea.</div>
+        <span class="feat-tag">Chatbot IA incluido</span>
       </div>
       <div class="feat-card">
         <div class="feat-ico"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
@@ -749,7 +775,7 @@ function handleInput(msg){
 
   if(t.match(/demo|ver|funciona|como|que hace|que es/)){
     typing(function(){
-      addMsg('Scout analiza la web de cualquier negocio en segundos, detecta sus carencias y genera:<br><br>✅ Web demo personalizada<br>✅ Script de llamada<br>✅ Propuesta comercial<br>✅ Calculadora ROI<br><br>Todo sin APIs externas. Instantáneo.',false);
+      addMsg('Scout analiza la web de cualquier negocio en segundos, detecta sus carencias y genera:<br><br>✅ Web demo personalizada<br>✅ Script de llamada<br>✅ Propuesta comercial<br>✅ Calculadora ROI<br><br>La herramienta que usan las agencias que venden chatbots IA.',false);
       setTimeout(function(){
         var msgs=document.getElementById('chat-msgs');
         var wrap=document.createElement('div');
@@ -758,7 +784,7 @@ function handleInput(msg){
         btn.className='wa-send-btn';
         btn.style.background='linear-gradient(135deg,#7c3aed,#5b21b6)';
         btn.innerHTML='Ver demo en vivo →';
-        btn.onclick=function(){window.open('https://scout.whitemoon.es/','_blank')};
+        btn.onclick=function(){window.open('https://wa.me/34643199580?text=Hola%2C+quiero+ver+una+demo+de+WhiteMoon+Scout','_blank')};
         wrap.appendChild(btn);
         msgs.appendChild(wrap);
         msgs.scrollTop=msgs.scrollHeight;

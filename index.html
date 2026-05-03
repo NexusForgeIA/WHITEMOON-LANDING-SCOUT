@@ -71,12 +71,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 40px;display:fl
 .stat-sep{width:1px;height:40px;background:var(--border2)}
 
 /* ── MOCK SCREENSHOT ── */
-.hero-visual{width:100%;max-width:900px;margin:60px auto 0;animation:fadeUp .8s ease .5s both;position:relative;overflow:visible}
-.hero-float{position:absolute;border-radius:12px;overflow:hidden;box-shadow:0 20px 40px rgba(0,0,0,.5);border:1px solid rgba(139,92,246,.2);z-index:2}
-.hero-float img{display:block;width:100%;height:auto}
-.hero-float-l{left:-60px;top:20%;width:180px;transform:rotate(-4deg)}
-.hero-float-r{right:-60px;bottom:20%;width:160px;transform:rotate(4deg)}
-@media(max-width:1100px){.hero-float{display:none}}
+.hero-visual{width:100%;max-width:900px;margin:60px auto 0;animation:fadeUp .8s ease .5s both;position:relative}
 .hero-visual::before{content:'';position:absolute;inset:-1px;border-radius:17px;background:linear-gradient(135deg,rgba(139,92,246,.3),rgba(232,121,249,.1),rgba(139,92,246,.05));padding:1px;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
 .mock-window{background:var(--bg1);border-radius:16px;overflow:hidden;box-shadow:0 40px 120px rgba(0,0,0,.8),0 0 0 1px rgba(139,92,246,.15)}
 .mock-bar{background:var(--bg2);padding:14px 18px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)}
@@ -288,12 +283,6 @@ footer{padding:40px 24px;border-top:1px solid var(--border2)}
 
   <!-- MOCK SCREENSHOT -->
   <div class="hero-visual">
-    <div class="hero-float hero-float-l" aria-hidden="true">
-      <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=300&q=80" alt="" loading="lazy">
-    </div>
-    <div class="hero-float hero-float-r" aria-hidden="true">
-      <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=300&q=80" alt="" loading="lazy">
-    </div>
     <div class="mock-window">
       <div class="mock-bar">
         <div class="mock-dot r"></div>
@@ -362,6 +351,35 @@ footer{padding:40px 24px;border-top:1px solid var(--border2)}
     </div>
   </div>
 </div>
+
+<!-- HERO IMAGES STRIP -->
+<section class="hero-strip" style="padding:0 24px 80px;background:var(--bg)">
+  <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:stretch" class="hero-strip-grid">
+
+    <div style="border-radius:16px;overflow:hidden;border:1px solid rgba(139,92,246,.15);box-shadow:0 20px 40px rgba(0,0,0,.4);position:relative;min-height:260px" class="hero-strip-card">
+      <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=700&q=80" alt="Equipo comercial" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block">
+      <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(124,58,237,.3),rgba(0,0,0,.2))"></div>
+      <div style="position:absolute;bottom:20px;left:20px;font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:#fff">
+        Equipos comerciales que cierran más
+      </div>
+    </div>
+
+    <div style="border-radius:16px;overflow:hidden;border:1px solid rgba(139,92,246,.15);box-shadow:0 20px 40px rgba(0,0,0,.4);position:relative;min-height:260px" class="hero-strip-card">
+      <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=700&q=80" alt="Datos en tiempo real" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block">
+      <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(124,58,237,.3),rgba(0,0,0,.2))"></div>
+      <div style="position:absolute;bottom:20px;left:20px;font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:#fff">
+        Datos en tiempo real para decidir mejor
+      </div>
+    </div>
+
+  </div>
+</section>
+<style>
+@media(max-width:600px){
+  .hero-strip-grid{grid-template-columns:1fr !important}
+  .hero-strip-card{min-height:200px !important}
+}
+</style>
 
 <!-- FEATURES -->
 <section class="features" id="features">

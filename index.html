@@ -773,10 +773,20 @@ function typing(cb,delay){
 function initChat(){
   setTimeout(function(){
     typing(function(){
-      addMsg('¡Hola! 👋 Soy el asistente de <b>WhiteMoon Scout</b>.<br>¿En qué puedo ayudarte?',false);
+      addMsg('¡Hola! 👋 Soy el asistente de <b>WhiteMoon Scout</b>.',false);
       setTimeout(function(){
-        addBtns(['💰 Ver planes y precios','⚡ Cómo funciona','🤔 Tengo dudas']);
-      },300);
+        typing(function(){
+          addMsg('Estoy aquí para resolver tus dudas sobre la herramienta — planes, funciones, acceso... lo que necesites 😊',false);
+          setTimeout(function(){
+            addBtns([
+              '💰 ¿Cuánto cuesta?',
+              '⚡ ¿Qué hace exactamente?',
+              '🏢 ¿Para qué tipo de agencia?',
+              '🚀 Quiero acceso'
+            ]);
+          },400);
+        },700);
+      },800);
     },800);
   },600);
 }
@@ -786,108 +796,236 @@ function handleInput(msg){
   var existing=document.getElementById('chat-quick-btns');
   if(existing)existing.remove();
 
-  // Captura nombre
+  // ── CAPTURA NOMBRE ──
   if(chatStep===1){
     chatName=msg.trim().split(' ')[0];
     chatStep=2;
     typing(function(){
-      addMsg('Perfecto '+chatName+' 😊 ¿Tu teléfono de contacto? Te llamamos en menos de 24h.',false);
+      addMsg('Encantado/a '+chatName+' 😊 Para poder darte acceso y contarte todo en detalle, ¿me dejas tu número de teléfono? Te llamamos cuando mejor te venga.',false);
     },700);
     return;
   }
 
-  // Captura teléfono
+  // ── CAPTURA TELÉFONO ──
   if(chatStep===2){
     var digits=msg.replace(/\D/g,'');
     if(digits.length<9){
-      typing(function(){addMsg('Hmm, ese número no parece válido. ¿Me lo confirmas?',false)},700);
+      typing(function(){
+        addMsg('Hmm, ese número no parece correcto 🤔 ¿Me lo confirmas? Solo los dígitos, sin espacios.',false);
+      },700);
       return;
     }
     chatPhone=digits;
     chatStep=3;
     typing(function(){
-      addMsg('¡Listo '+chatName+'! He anotado tu solicitud 🎉<br><br>Nuestro equipo te contactará en menos de 24h para darte acceso y resolver todas tus dudas.',false);
+      addMsg('¡Perfecto '+chatName+'! Ya tengo tus datos 🎉',false);
       setTimeout(function(){
-        var msgs=document.getElementById('chat-msgs');
-        var wrap=document.createElement('div');
-        wrap.className='msg-bot-wrap';
-        var btn=document.createElement('button');
-        btn.className='wa-send-btn';
-        btn.innerHTML='<svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 0C5.373 0 0 5.373 0 12c0 2.123.556 4.112 1.528 5.837L.057 23.215c-.073.266.173.512.44.44l5.42-1.463A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.368l-.36-.214-3.716 1.003 1.02-3.617-.235-.373A9.818 9.818 0 0112 2.182c5.426 0 9.818 4.392 9.818 9.818 0 5.427-4.392 9.818-9.818 9.818z"/></svg>Escribir por WhatsApp';
-        btn.onclick=function(){window.open('https://wa.me/34643199580?text=Hola%2C+soy+'+encodeURIComponent(chatName)+'+('+chatPhone+')%2C+me+interesa+WhiteMoon+Scout','_blank')};
-        wrap.appendChild(btn);
-        msgs.appendChild(wrap);
-        msgs.scrollTop=msgs.scrollHeight;
+        typing(function(){
+          addMsg('Nuestro equipo te contactará en menos de 24h para darte acceso personalizado y resolver cualquier duda. Si prefieres escribir ahora mismo, aquí tienes el botón 👇',false);
+          setTimeout(function(){
+            var msgs=document.getElementById('chat-msgs');
+            var wrap=document.createElement('div');
+            wrap.className='msg-bot-wrap';
+            var btn=document.createElement('button');
+            btn.className='wa-send-btn';
+            btn.innerHTML='<svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 0C5.373 0 0 5.373 0 12c0 2.123.556 4.112 1.528 5.837L.057 23.215c-.073.266.173.512.44.44l5.42-1.463A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.368l-.36-.214-3.716 1.003 1.02-3.617-.235-.373A9.818 9.818 0 0112 2.182c5.426 0 9.818 4.392 9.818 9.818 0 5.427-4.392 9.818-9.818 9.818z"/></svg> Escribir por WhatsApp ahora';
+            btn.onclick=function(){
+              window.open('https://wa.me/34643199580?text=Hola%2C+soy+'+encodeURIComponent(chatName)+'+('+chatPhone+')%2C+me+interesa+WhiteMoon+Scout','_blank');
+            };
+            wrap.appendChild(btn);
+            msgs.appendChild(wrap);
+            msgs.scrollTop=msgs.scrollHeight;
+          },400);
+        },800);
+      },600);
+    },800);
+    return;
+  }
+
+  // ── PRECIOS / PLANES ──
+  if(t.match(/precio|plan|cuanto|cuesta|199|399|699|coste|tarifa|mensual/)){
+    typing(function(){
+      addMsg('¡Buena pregunta! Tenemos 3 planes según el tamaño de tu equipo 👇',false);
+      setTimeout(function(){
+        typing(function(){
+          addMsg('<b>🔍 Scout — 199€/mes</b><br>Perfecto para freelancers o agencias pequeñas. 1-2 usuarios, todas las funciones incluidas.<br><br><b>🚀 Agency — 399€/mes</b> ⭐<br>El más popular. Hasta 5 usuarios. Ideal si tienes equipo comercial.<br><br><b>🏆 Enterprise — 699€/mes</b><br>Usuarios ilimitados + white label. Puedes vender la herramienta con tu propia marca.',false);
+          setTimeout(function(){
+            typing(function(){
+              addMsg('Todos sin permanencia. Si en el primer mes no ves resultados, cancelas y listo 👌',false);
+              setTimeout(function(){
+                addBtns(['🚀 Quiero el plan Agency','🏆 Cuéntame el Enterprise','❓ ¿Qué incluye cada uno?']);
+              },400);
+            },700);
+          },800);
+        },900);
+      },500);
+    },800);
+    return;
+  }
+
+  // ── QUÉ HACE / FUNCIONES ──
+  if(t.match(/que hace|funciona|como|sirve|caracteristica|funcion|herramienta|que es/)){
+    typing(function(){
+      addMsg('Scout es un CRM de ventas diseñado específicamente para agencias que venden servicios de IA 🎯',false);
+      setTimeout(function(){
+        typing(function(){
+          addMsg('En resumen, con Scout puedes:<br><br>🔍 <b>Analizar cualquier web</b> — pegas el código fuente y en segundos sabes exactamente qué le falta al negocio y cómo vendérselo<br><br>🌐 <b>Generar una web demo</b> personalizada con el nombre y servicios reales del cliente, con chatbot IA integrado<br><br>📋 <b>Preparar la visita</b> — ficha imprimible, script de llamada, calculadora ROI y propuesta lista para enviar por WhatsApp<br><br>📊 <b>Gestionar tu pipeline</b> — prospectos, clientes activos y MRR en tiempo real',false);
+          setTimeout(function(){
+            addBtns(['💰 ¿Cuánto cuesta?','🏢 ¿Para qué agencias?','🚀 Quiero acceso']);
+          },400);
+        },1000);
+      },500);
+    },800);
+    return;
+  }
+
+  // ── PARA QUÉ AGENCIAS ──
+  if(t.match(/agencia|tipo|para quien|perfil|freelance|equipo|comercial|pequeña|grande/)){
+    typing(function(){
+      addMsg('Scout está pensado para agencias que venden o quieren vender servicios de IA — chatbots, automatizaciones, webs con IA... 🤖',false);
+      setTimeout(function(){
+        typing(function(){
+          addMsg('Funciona muy bien si eres:<br><br>👤 <b>Freelancer o agencia pequeña</b> — el plan Scout te da todo lo que necesitas para prospectar y cerrar solo/a<br><br>👥 <b>Agencia con equipo</b> — el plan Agency permite que hasta 5 comerciales trabajen a la vez con sus propios datos<br><br>🏢 <b>Agencia grande o quieres revender</b> — Enterprise incluye white label para que tus clientes vean tu marca, no la nuestra',false);
+          setTimeout(function(){
+            addBtns(['💰 Ver precios','🚀 Solicitar acceso','❓ Más dudas']);
+          },400);
+        },1000);
+      },500);
+    },800);
+    return;
+  }
+
+  // ── WHITE LABEL / ENTERPRISE ──
+  if(t.match(/white label|marca blanca|reventa|enterprise|marca propia|mis clientes/)){
+    typing(function(){
+      addMsg('El plan Enterprise es muy potente si quieres escalar 💪',false);
+      setTimeout(function(){
+        typing(function(){
+          addMsg('Con white label, tus clientes ven <b>tu marca</b> en la herramienta, no WhiteMoon. Es como tener tu propio SaaS sin haberlo construido.<br><br>Además puedes <b>revender los servicios de chatbot</b> de WhiteMoon y llevarte comisión por cada cliente que cierres. Un canal de ingresos extra sin esfuerzo.',false);
+          setTimeout(function(){
+            addBtns(['💰 ¿Cuánto cuesta Enterprise?','🚀 Quiero más info']);
+          },400);
+        },1000);
+      },500);
+    },800);
+    return;
+  }
+
+  // ── CUÁNTOS USUARIOS ──
+  if(t.match(/usuario|cuantos|personas|equipo|comercial|seats/)){
+    typing(function(){
+      addMsg('Depende del plan que elijas 😊<br><br>🔍 Scout: 1-2 usuarios<br>🚀 Agency: hasta 5 usuarios<br>🏆 Enterprise: ilimitados<br><br>Cada usuario tiene su propio login y sus datos están separados. Nadie ve los prospectos de otro.',false);
+      setTimeout(function(){
+        addBtns(['💰 Ver precios','🚀 Solicitar acceso']);
       },400);
     },800);
     return;
   }
 
-  // Keywords
-  if(t.match(/precio|plan|cuanto|cuesta|scout|agency|enterprise|199|399|699/)){
+  // ── SEGURIDAD / DATOS ──
+  if(t.match(/seguro|datos|privacidad|gdpr|servidor|donde.*guarda|base de datos/)){
     typing(function(){
-      addMsg('Tenemos 3 planes:<br><br><b>Scout — 199€/mes</b> · 1-2 usuarios<br><b>Agency — 399€/mes</b> · hasta 5 usuarios ⭐<br><b>Enterprise — 699€/mes</b> · ilimitado + white label<br><br>Sin permanencia. Cancela cuando quieras.',false);
-      setTimeout(function(){addBtns(['🚀 Solicitar acceso','🤔 Más dudas'])},400);
-    },800);
-    return;
-  }
-
-  if(t.match(/demo|ver|funciona|como|que hace|que es/)){
-    typing(function(){
-      addMsg('Scout analiza la web de cualquier negocio en segundos, detecta sus carencias y genera:<br><br>✅ Web demo personalizada<br>✅ Script de llamada<br>✅ Propuesta comercial<br>✅ Calculadora ROI<br><br>La herramienta que usan las agencias que venden chatbots IA.',false);
+      addMsg('Buena pregunta, es importante 🔒',false);
       setTimeout(function(){
-        var msgs=document.getElementById('chat-msgs');
-        var wrap=document.createElement('div');
-        wrap.className='msg-bot-wrap';
-        var btn=document.createElement('button');
-        btn.className='wa-send-btn';
-        btn.style.background='linear-gradient(135deg,#7c3aed,#5b21b6)';
-        btn.innerHTML='Solicitar acceso por WhatsApp →';
-        btn.onclick=function(){window.open('https://wa.me/34643199580?text=Hola%2C+me+interesa+WhiteMoon+Scout','_blank')};
-        wrap.appendChild(btn);
-        msgs.appendChild(wrap);
-        msgs.scrollTop=msgs.scrollHeight;
-      },400);
-    },900);
-    return;
-  }
-
-  if(t.match(/acceso|solicitar|empezar|contratar|quiero|interesa/)){
-    chatStep=1;
-    typing(function(){
-      addMsg('¡Perfecto! Te damos acceso en menos de 24h 🚀<br>¿Me dices tu nombre?',false);
-    },700);
-    return;
-  }
-
-  if(t.match(/white label|marca blanca|reventa|enterprise|agencia grande/)){
-    typing(function(){
-      addMsg('El plan Enterprise incluye white label completo — tus clientes ven <b>tu marca</b>, no WhiteMoon.<br><br>También puedes revender nuestros servicios de chatbot con comisión. Es un canal de ventas externalizado.',false);
-      setTimeout(function(){addBtns(['💰 Ver precio Enterprise','🚀 Solicitar acceso'])},400);
-    },900);
-    return;
-  }
-
-  if(t.match(/usuario|equipo|comercial|cuantos/)){
-    typing(function(){
-      addMsg('Scout: 1-2 usuarios<br>Agency: hasta 5 usuarios<br>Enterprise: ilimitados<br><br>Cada usuario tiene su propio login y sus datos separados.',false);
-      setTimeout(function(){addBtns(['💰 Ver precios','🚀 Solicitar acceso'])},400);
+        typing(function(){
+          addMsg('Los datos se guardan en <b>Supabase</b> (infraestructura europea, GDPR compliant). Cada agencia tiene sus datos completamente separados — nadie puede ver los prospectos o clientes de otra agencia.',false);
+          setTimeout(function(){
+            addBtns(['💰 Ver planes','🚀 Solicitar acceso']);
+          },400);
+        },900);
+      },500);
     },800);
     return;
   }
 
-  if(t.match(/soporte|ayuda|problema|contacto/)){
-    chatStep=1;
+  // ── PERMANENCIA / CANCELAR ──
+  if(t.match(/permanencia|cancel|compromiso|contrato|baja|mes a mes/)){
     typing(function(){
-      addMsg('Claro, te ayudamos directamente 💪<br>¿Me dices tu nombre para ponernos en contacto?',false);
+      addMsg('Sin permanencia, mes a mes 🙌',false);
+      setTimeout(function(){
+        typing(function(){
+          addMsg('No hay contrato de mínimos ni penalización por cancelar. Si un mes decides que no lo necesitas, cancelas y listo. Sin llamadas incómodas ni letras pequeñas.',false);
+          setTimeout(function(){
+            addBtns(['💰 Ver precios','🚀 Quiero probarlo']);
+          },400);
+        },800);
+      },400);
     },700);
     return;
   }
 
-  // Fallback
+  // ── ACCESO / SOLICITAR ──
+  if(t.match(/acceso|solicitar|empezar|contratar|quiero|interesa|probar|alta/)){
+    chatStep=1;
+    typing(function(){
+      addMsg('¡Genial, me alegra que te interese! 🚀',false);
+      setTimeout(function(){
+        typing(function(){
+          addMsg('El acceso es por invitación — te lo damos en menos de 24h y te acompañamos en los primeros pasos para que saques partido desde el primer día.<br><br>¿Me dices tu nombre para empezar?',false);
+        },800);
+      },500);
+    },700);
+    return;
+  }
+
+  // ── COMPARACIÓN ──
+  if(t.match(/compara|diferencia|vs|mejor que|hubspot|pipedrive|salesforce|otro crm/)){
+    typing(function(){
+      addMsg('La diferencia principal es el enfoque 🎯',false);
+      setTimeout(function(){
+        typing(function(){
+          addMsg('CRMs como HubSpot o Salesforce son genéricos — sirven para cualquier negocio pero no están pensados para vender IA.<br><br>Scout está diseñado <b>específicamente</b> para agencias de IA: analiza webs de prospectos, genera demos de chatbot personalizadas y tiene los scripts y propuestas adaptados al sector.<br><br>Es como comparar un bisturí con un cuchillo de cocina. Los dos cortan, pero uno está hecho para algo concreto.',false);
+          setTimeout(function(){
+            addBtns(['💰 Ver precios','⚡ Ver funciones','🚀 Solicitar acceso']);
+          },400);
+        },1100);
+      },500);
+    },800);
+    return;
+  }
+
+  // ── DUDAS / SOPORTE ──
+  if(t.match(/duda|pregunta|no entiendo|ayuda|soporte|contacto|hablar/)){
+    chatStep=1;
+    typing(function(){
+      addMsg('Claro, para eso estoy 😊 Cuéntame tu duda y la resolvemos juntos, o si prefieres hablar directamente con el equipo te conectamos enseguida.<br><br>¿Me dices tu nombre?',false);
+    },700);
+    return;
+  }
+
+  // ── SALUDO ──
+  if(t.match(/^(hola|buenas|hey|ey|buenos|saludos|hi|hello)[\s!?]*$/)){
+    typing(function(){
+      addMsg('¡Hola! 👋 Encantado de saludarte. ¿En qué puedo ayudarte con WhiteMoon Scout?',false);
+      setTimeout(function(){
+        addBtns(['💰 Ver planes','⚡ ¿Qué hace?','🚀 Solicitar acceso']);
+      },400);
+    },600);
+    return;
+  }
+
+  // ── GRACIAS ──
+  if(t.match(/gracias|thank|perfecto|genial|ok|vale|entendido/)){
+    typing(function(){
+      addMsg('¡De nada! 😊 Si tienes más dudas aquí estaré. ¿Algo más en lo que pueda ayudarte?',false);
+      setTimeout(function(){
+        addBtns(['💰 Ver planes','🚀 Solicitar acceso']);
+      },400);
+    },600);
+    return;
+  }
+
+  // ── FALLBACK ──
   typing(function(){
-    addMsg('Puedo ayudarte con información sobre planes, funciones o darte acceso a Scout.<br>¿Qué necesitas?',false);
-    setTimeout(function(){addBtns(['💰 Ver planes','⚡ Cómo funciona','🚀 Solicitar acceso'])},400);
+    addMsg('Mmm, no estoy seguro de haber entendido bien tu pregunta 🤔',false);
+    setTimeout(function(){
+      typing(function(){
+        addMsg('Puedo ayudarte con información sobre planes, funciones de Scout, o darte acceso directo. ¿Qué te interesa más?',false);
+        setTimeout(function(){
+          addBtns(['💰 Ver planes','⚡ ¿Qué hace Scout?','🏢 ¿Para qué agencias?','🚀 Quiero acceso']);
+        },400);
+      },700);
+    },400);
   },800);
 }
 

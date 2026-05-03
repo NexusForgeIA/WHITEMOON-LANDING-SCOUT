@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WhiteMoon Scout — La herramienta que cierra ventas</title>
+<meta name="description" content="El CRM de ventas IA para agencias. Analiza webs, genera demos personalizadas y cierra más clientes en menos tiempo.">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --p:#8b5cf6;--p2:#7c3aed;--p3:#6d28d9;
+  --accent:#a78bfa;--accent2:#c4b5fd;
+  --neon:#b57bee;--neon2:#7c3aed;
+  --bg:#04040a;--bg1:#07070f;--bg2:#0a0a14;--bg3:#0e0e1c;
+  --card:#0d0d1a;--card2:#111120;
+  --text:#f0effe;--text2:#a09dc0;--muted:#4a4870;
+  --border:rgba(139,92,246,.15);--border2:rgba(255,255,255,.05);
+  --glow:rgba(139,92,246,.4);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:var(--p2)}
+
+/* ── NOISE TEXTURE ── */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.4}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 40px;display:flex;align-items:center;justify-content:space-between;background:rgba(4,4,10,.8);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo-mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--p),var(--p3));display:flex;align-items:center;justify-content:center}
+.nav-logo-mark svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2}
+.nav-logo-txt{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:800;color:#fff;letter-spacing:-.02em}
+.nav-logo-txt span{color:var(--accent)}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{font-size:.82rem;color:var(--text2);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{padding:9px 22px;background:linear-gradient(135deg,var(--p),var(--p3));border:none;border-radius:8px;color:#fff;font-family:'Inter',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s;text-decoration:none;letter-spacing:.02em}
+.nav-cta:hover{filter:brightness(1.15);transform:translateY(-1px);box-shadow:0 8px 24px var(--glow)}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;position:relative;overflow:hidden}
+
+/* Glow orbs */
+.hero::after{content:'';position:absolute;top:20%;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(139,92,246,.12) 0%,transparent 70%);pointer-events:none}
+.orb1{position:absolute;top:-100px;left:-150px;width:500px;height:500px;background:radial-gradient(circle,rgba(139,92,246,.08) 0%,transparent 70%);pointer-events:none}
+.orb2{position:absolute;bottom:-100px;right:-150px;width:600px;height:600px;background:radial-gradient(circle,rgba(167,139,250,.06) 0%,transparent 70%);pointer-events:none}
+
+.hero-badge{display:inline-flex;align-items:center;gap:7px;padding:6px 16px;background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.25);border-radius:20px;font-size:.72rem;font-weight:600;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin-bottom:28px;animation:fadeUp .6s ease both}
+.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+
+.hero-title{font-family:'Syne',sans-serif;font-size:clamp(2.8rem,7vw,5.5rem);font-weight:800;line-height:1.05;letter-spacing:-.04em;margin-bottom:24px;animation:fadeUp .7s ease .1s both}
+.hero-title .line1{display:block;color:#fff}
+.hero-title .line2{display:block;background:linear-gradient(135deg,var(--accent) 0%,#e879f9 50%,var(--accent2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+.hero-sub{font-size:clamp(1rem,2vw,1.2rem);color:var(--text2);line-height:1.7;max-width:560px;margin:0 auto 40px;font-weight:300;animation:fadeUp .7s ease .2s both}
+
+.hero-actions{display:flex;align-items:center;gap:14px;justify-content:center;flex-wrap:wrap;animation:fadeUp .7s ease .3s both}
+.btn-primary{padding:14px 32px;background:linear-gradient(135deg,var(--p),var(--p3));border:none;border-radius:10px;color:#fff;font-family:'Inter',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .25s;text-decoration:none;display:inline-flex;align-items:center;gap:8px;letter-spacing:.02em}
+.btn-primary:hover{filter:brightness(1.15);transform:translateY(-2px);box-shadow:0 12px 32px var(--glow)}
+.btn-primary svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+.btn-secondary{padding:13px 28px;background:transparent;border:1px solid var(--border);border-radius:10px;color:var(--text2);font-family:'Inter',sans-serif;font-size:.9rem;font-weight:500;cursor:pointer;transition:all .25s;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.btn-secondary:hover{border-color:rgba(139,92,246,.4);color:var(--text);background:rgba(139,92,246,.05)}
+
+.hero-stats{display:flex;align-items:center;gap:32px;justify-content:center;margin-top:56px;padding-top:40px;border-top:1px solid var(--border2);animation:fadeUp .7s ease .4s both;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-num{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:#fff;line-height:1;background:linear-gradient(135deg,var(--accent),#e879f9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-lbl{font-size:.72rem;color:var(--muted);margin-top:4px;letter-spacing:.05em}
+.stat-sep{width:1px;height:40px;background:var(--border2)}
+
+/* ── MOCK SCREENSHOT ── */
+.hero-visual{width:100%;max-width:900px;margin:60px auto 0;animation:fadeUp .8s ease .5s both;position:relative}
+.hero-visual::before{content:'';position:absolute;inset:-1px;border-radius:17px;background:linear-gradient(135deg,rgba(139,92,246,.3),rgba(232,121,249,.1),rgba(139,92,246,.05));padding:1px;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.mock-window{background:var(--bg1);border-radius:16px;overflow:hidden;box-shadow:0 40px 120px rgba(0,0,0,.8),0 0 0 1px rgba(139,92,246,.15)}
+.mock-bar{background:var(--bg2);padding:14px 18px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)}
+.mock-dot{width:10px;height:10px;border-radius:50%}
+.mock-dot.r{background:#ff5f57}.mock-dot.y{background:#ffbd2e}.mock-dot.g{background:#28ca41}
+.mock-url{flex:1;background:var(--bg3);border-radius:6px;padding:5px 12px;font-family:'DM Mono',monospace;font-size:.68rem;color:var(--muted);margin:0 12px}
+.mock-body{padding:20px;display:grid;grid-template-columns:180px 1fr;gap:16px;min-height:320px}
+.mock-sidebar{background:rgba(139,92,246,.04);border:1px solid var(--border);border-radius:10px;padding:14px}
+.mock-sb-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:7px;margin-bottom:4px;font-size:.65rem;color:var(--text2)}
+.mock-sb-item.active{background:rgba(139,92,246,.15);color:var(--accent)}
+.mock-sb-dot{width:20px;height:20px;border-radius:5px;background:rgba(139,92,246,.1);flex-shrink:0}
+.mock-sb-item.active .mock-sb-dot{background:rgba(139,92,246,.3)}
+.mock-content{display:flex;flex-direction:column;gap:12px}
+.mock-header-row{display:flex;align-items:center;justify-content:space-between}
+.mock-title{font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;color:#fff}
+.mock-badge{font-size:.58rem;padding:3px 9px;border-radius:10px;background:rgba(255,140,66,.12);color:#ffb380;border:1px solid rgba(255,140,66,.2)}
+.mock-card{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:13px}
+.mock-card-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.mock-domain{font-size:.75rem;font-weight:700;color:#fff}
+.mock-score{font-family:'DM Mono',monospace;font-size:1.4rem;font-weight:700;color:#22c55e}
+.mock-flags{display:flex;gap:5px;flex-wrap:wrap}
+.mock-flag{font-size:.55rem;padding:2px 7px;border-radius:4px}
+.mf-r{background:rgba(255,77,106,.1);color:#ff8da0;border:1px solid rgba(255,77,106,.2)}
+.mf-g{background:rgba(34,197,94,.1);color:#86efac;border:1px solid rgba(34,197,94,.2)}
+.mock-btns{display:flex;gap:5px;margin-top:8px}
+.mock-btn{font-size:.55rem;padding:3px 9px;border-radius:5px;border:1px solid var(--border);color:var(--text2)}
+.mock-btn.highlight{background:rgba(0,201,255,.1);border-color:rgba(0,201,255,.3);color:#80e4ff}
+.mock-stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mock-stat-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center}
+.mock-stat-val{font-family:'DM Mono',monospace;font-size:1rem;font-weight:700;color:var(--accent)}
+.mock-stat-lbl{font-size:.55rem;color:var(--muted);margin-top:2px}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+
+/* ── SECTION COMMON ── */
+section{padding:100px 24px;position:relative;z-index:1}
+.container{max-width:1100px;margin:0 auto}
+.section-label{font-size:.68rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--p);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section-label::before{content:'';width:20px;height:1px;background:var(--p)}
+.section-title{font-family:'Syne',sans-serif;font-size:clamp(2rem,4vw,3rem);font-weight:800;letter-spacing:-.03em;color:#fff;margin-bottom:16px;line-height:1.1}
+.section-title .grad{background:linear-gradient(135deg,var(--accent),#e879f9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.section-sub{font-size:1rem;color:var(--text2);line-height:1.7;max-width:520px}
+
+/* ── FEATURES ── */
+.features{background:linear-gradient(180deg,var(--bg) 0%,var(--bg1) 50%,var(--bg) 100%)}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:56px}
+.feat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px;position:relative;overflow:hidden;transition:all .3s}
+.feat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--p),transparent);opacity:0;transition:opacity .3s}
+.feat-card:hover{border-color:rgba(139,92,246,.3);transform:translateY(-3px);box-shadow:0 20px 40px rgba(0,0,0,.4)}
+.feat-card:hover::before{opacity:1}
+.feat-ico{width:44px;height:44px;border-radius:11px;background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2);display:flex;align-items:center;justify-content:center;margin-bottom:16px;transition:all .3s}
+.feat-card:hover .feat-ico{background:rgba(139,92,246,.2);box-shadow:0 0 20px rgba(139,92,246,.2)}
+.feat-ico svg{width:20px;height:20px;stroke:var(--accent);fill:none;stroke-width:1.6}
+.feat-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:#fff;margin-bottom:8px}
+.feat-desc{font-size:.82rem;color:var(--text2);line-height:1.65}
+.feat-tag{display:inline-flex;margin-top:12px;font-size:.62rem;padding:3px 10px;border-radius:10px;background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.15);color:var(--accent);font-family:'DM Mono',monospace}
+
+/* ── PLANS ── */
+.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:56px;align-items:start}
+.plan-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:30px;position:relative;transition:all .3s}
+.plan-card:hover{border-color:rgba(139,92,246,.3);transform:translateY(-4px)}
+.plan-card.featured{border-color:var(--p);background:linear-gradient(165deg,rgba(139,92,246,.08) 0%,var(--card) 100%);box-shadow:0 0 0 1px rgba(139,92,246,.2),0 20px 60px rgba(139,92,246,.15)}
+.plan-popular{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--p),var(--p3));color:#fff;font-size:.62rem;font-weight:700;padding:4px 14px;border-radius:10px;letter-spacing:.08em;white-space:nowrap}
+.plan-name-row{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.plan-ico{font-size:1.3rem}
+.plan-name{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:800;color:#fff}
+.plan-desc{font-size:.78rem;color:var(--text2);margin-bottom:22px;line-height:1.5}
+.plan-price{margin-bottom:24px}
+.plan-amount{font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;color:#fff;line-height:1;letter-spacing:-.03em}
+.plan-amount span{font-size:1.1rem;color:var(--text2);font-weight:400}
+.plan-period{font-size:.75rem;color:var(--muted);margin-top:4px}
+.plan-features{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.plan-feat{display:flex;align-items:flex-start;gap:9px;font-size:.8rem;color:var(--text2);line-height:1.4}
+.plan-feat svg{width:14px;height:14px;stroke:var(--accent);fill:none;stroke-width:2.5;flex-shrink:0;margin-top:2px}
+.plan-feat.muted svg{stroke:var(--muted)}
+.plan-feat.muted{color:var(--muted)}
+.plan-btn{width:100%;padding:13px;border-radius:10px;font-family:'Inter',sans-serif;font-size:.84rem;font-weight:600;cursor:pointer;transition:all .25s;border:none;letter-spacing:.02em}
+.plan-btn-primary{background:linear-gradient(135deg,var(--p),var(--p3));color:#fff}
+.plan-btn-primary:hover{filter:brightness(1.1);transform:translateY(-1px);box-shadow:0 8px 24px var(--glow)}
+.plan-btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text2)}
+.plan-btn-ghost:hover{border-color:rgba(139,92,246,.4);color:var(--text)}
+
+/* ── HOW IT WORKS ── */
+.how-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:56px;position:relative}
+.how-grid::before{content:'';position:absolute;top:32px;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,var(--p),var(--p),var(--p),transparent);opacity:.2}
+.how-step{text-align:center;padding:24px 16px;position:relative}
+.how-num{width:64px;height:64px;border-radius:16px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--accent);position:relative;z-index:1;transition:all .3s}
+.how-step:hover .how-num{background:rgba(139,92,246,.1);border-color:rgba(139,92,246,.3);box-shadow:0 0 20px rgba(139,92,246,.2)}
+.how-title{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:#fff;margin-bottom:7px}
+.how-desc{font-size:.76rem;color:var(--text2);line-height:1.6}
+
+/* ── CTA FINAL ── */
+.cta-section{padding:120px 24px}
+.cta-box{background:linear-gradient(135deg,rgba(139,92,246,.08) 0%,rgba(109,40,217,.04) 100%);border:1px solid rgba(139,92,246,.2);border-radius:24px;padding:80px 40px;text-align:center;position:relative;overflow:hidden}
+.cta-box::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:400px;height:400px;background:radial-gradient(circle,rgba(139,92,246,.15) 0%,transparent 70%);pointer-events:none}
+.cta-title{font-family:'Syne',sans-serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:800;letter-spacing:-.03em;color:#fff;margin-bottom:16px;line-height:1.1;position:relative}
+.cta-sub{font-size:1rem;color:var(--text2);max-width:480px;margin:0 auto 36px;line-height:1.7;position:relative}
+.cta-actions{display:flex;align-items:center;gap:12px;justify-content:center;flex-wrap:wrap;position:relative}
+.cta-note{margin-top:20px;font-size:.74rem;color:var(--muted);position:relative}
+.cta-note span{color:var(--text2)}
+
+/* ── FOOTER ── */
+footer{padding:40px 24px;border-top:1px solid var(--border2)}
+.footer-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.footer-logo{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:var(--text2)}
+.footer-logo span{color:var(--accent)}
+.footer-links{display:flex;gap:24px}
+.footer-links a{font-size:.76rem;color:var(--muted);text-decoration:none;transition:color .2s}
+.footer-links a:hover{color:var(--text2)}
+.footer-copy{font-size:.72rem;color:var(--muted);font-family:'DM Mono',monospace}
+
+/* ── WHATSAPP FLOAT ── */
+.wa-float{position:fixed;bottom:28px;right:28px;z-index:200}
+.wa-btn{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#25d366,#128c7e);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(37,211,102,.3);cursor:pointer;transition:all .25s;text-decoration:none;animation:bounceIn .6s ease 1s both}
+.wa-btn:hover{transform:scale(1.1);box-shadow:0 12px 32px rgba(37,211,102,.4)}
+.wa-btn svg{width:26px;height:26px;fill:#fff}
+@keyframes bounceIn{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  nav{padding:14px 20px}
+  .nav-links{display:none}
+  .features-grid{grid-template-columns:1fr 1fr}
+  .plans-grid{grid-template-columns:1fr}
+  .how-grid{grid-template-columns:1fr 1fr}
+  .how-grid::before{display:none}
+  .mock-body{grid-template-columns:1fr}
+  .mock-sidebar{display:none}
+}
+@media(max-width:600px){
+  nav{padding:12px 16px}
+  .hero{padding:100px 16px 60px}
+  .hero-stats{gap:20px}
+  .stat-sep{display:none}
+  section{padding:70px 16px}
+  .features-grid{grid-template-columns:1fr}
+  .how-grid{grid-template-columns:1fr}
+  .cta-box{padding:50px 20px}
+  .footer-inner{flex-direction:column;text-align:center}
+  .footer-links{justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <img src="data:image/jpeg;base64,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" alt="WhiteMoon Logo" style="height:42px;width:auto;object-fit:contain;border-radius:6px">
+  </a>
+  <div class="nav-links">
+    <a href="#features">Funciones</a>
+    <a href="#plans">Planes</a>
+    <a href="#how">Cómo funciona</a>
+    <a href="https://scout.whitemoon.es/" target="_blank">Entrar</a>
+  </div>
+  <a href="#plans" class="nav-cta">Solicitar acceso</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="orb1"></div>
+  <div class="orb2"></div>
+
+  <div class="hero-badge">
+    <div class="hero-badge-dot"></div>
+    Herramienta activa · Agencias de IA
+  </div>
+
+  <h1 class="hero-title">
+    <span class="line1">El CRM que convierte</span>
+    <span class="line2">prospectos en clientes</span>
+  </h1>
+
+  <p class="hero-sub">Analiza la web de cualquier negocio, detecta sus carencias, genera una demo personalizada y cierra la venta. Todo en menos de 5 minutos.</p>
+
+  <div class="hero-actions">
+    <a href="#plans" class="btn-primary">
+      <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      Solicitar acceso
+    </a>
+    <a href="https://scout.whitemoon.es/" target="_blank" class="btn-secondary">
+      <svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      Ver demo en vivo
+    </a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">9</div><div class="stat-lbl">Sectores cubiertos</div></div>
+    <div class="stat-sep"></div>
+    <div class="stat"><div class="stat-num">3'</div><div class="stat-lbl">De HTML a demo lista</div></div>
+    <div class="stat-sep"></div>
+    <div class="stat"><div class="stat-num">0</div><div class="stat-lbl">APIs externas</div></div>
+    <div class="stat-sep"></div>
+    <div class="stat"><div class="stat-num">∞</div><div class="stat-lbl">Prospectos analizados</div></div>
+  </div>
+
+  <!-- MOCK SCREENSHOT -->
+  <div class="hero-visual">
+    <div class="mock-window">
+      <div class="mock-bar">
+        <div class="mock-dot r"></div>
+        <div class="mock-dot y"></div>
+        <div class="mock-dot g"></div>
+        <div class="mock-url">scout.whitemoon.es/</div>
+      </div>
+      <div class="mock-body">
+        <div class="mock-sidebar">
+          <div class="mock-sb-item active"><div class="mock-sb-dot"></div>Analizar Negocio</div>
+          <div class="mock-sb-item"><div class="mock-sb-dot"></div>Propuestas</div>
+          <div class="mock-sb-item"><div class="mock-sb-dot"></div>Clientes</div>
+          <div class="mock-sb-item"><div class="mock-sb-dot"></div>Mis Tarifas</div>
+          <div style="margin-top:16px;font-size:.58rem;color:var(--muted);padding:0 8px;letter-spacing:.1em;text-transform:uppercase">Pipeline</div>
+          <div class="mock-sb-item"><div class="mock-sb-dot"></div>Estados</div>
+        </div>
+        <div class="mock-content">
+          <div class="mock-stats-row">
+            <div class="mock-stat-card"><div class="mock-stat-val">12</div><div class="mock-stat-lbl">Analizados</div></div>
+            <div class="mock-stat-card"><div class="mock-stat-val">8</div><div class="mock-stat-lbl">Propuestas</div></div>
+            <div class="mock-stat-card"><div class="mock-stat-val" style="color:#22c55e">1.196€</div><div class="mock-stat-lbl">MRR</div></div>
+          </div>
+          <div class="mock-card">
+            <div class="mock-card-row">
+              <div><div class="mock-domain">🦷 clinicadental-lopez.es</div><div style="font-size:.6rem;color:var(--muted);margin-top:2px">Clínica Dental · WordPress · 4 oportunidades</div></div>
+              <div class="mock-score">74%</div>
+            </div>
+            <div class="mock-flags">
+              <span class="mock-flag mf-r">Sin chatbot</span>
+              <span class="mock-flag mf-r">Sin WA</span>
+              <span class="mock-flag mf-g">FB</span>
+              <span class="mock-flag mf-g">IG</span>
+              <span class="mock-flag mf-r">Sin reservas</span>
+              <span class="mock-flag mf-r">SEO C</span>
+            </div>
+            <div class="mock-btns">
+              <span class="mock-btn">Visitar web</span>
+              <span class="mock-btn">Servicios + Prompts ▾</span>
+              <span class="mock-btn highlight">🌐 Generar Web Demo</span>
+              <span class="mock-btn">📋 Ficha</span>
+              <span class="mock-btn">📞 Script</span>
+            </div>
+          </div>
+          <div class="mock-card">
+            <div class="mock-card-row">
+              <div><div class="mock-domain">⚖️ bufete-garcia.es</div><div style="font-size:.6rem;color:var(--muted);margin-top:2px">Abogado · Wix · 6 oportunidades</div></div>
+              <div class="mock-score" style="color:#ffb380">58%</div>
+            </div>
+            <div class="mock-flags">
+              <span class="mock-flag mf-r">Sin chatbot</span>
+              <span class="mock-flag mf-r">Sin WA</span>
+              <span class="mock-flag mf-r">Sin FB</span>
+              <span class="mock-flag mf-r">Sin IG</span>
+              <span class="mock-flag mf-g">Reservas</span>
+              <span class="mock-flag mf-r">SEO D</span>
+            </div>
+            <div class="mock-btns">
+              <span class="mock-btn">Visitar web</span>
+              <span class="mock-btn">Servicios + Prompts ▾</span>
+              <span class="mock-btn highlight">🌐 Generar Web Demo</span>
+              <span class="mock-btn">📋 Ficha</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="container">
+    <div class="section-label">Funcionalidades</div>
+    <h2 class="section-title">Todo lo que necesita<br>un equipo comercial de IA</h2>
+    <p class="section-sub">Sin APIs externas. Sin suscripciones ocultas. Todo funciona desde el navegador en tiempo real.</p>
+
+    <div class="features-grid">
+      <div class="feat-card">
+        <div class="feat-ico"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+        <div class="feat-title">Análisis HTML en segundos</div>
+        <div class="feat-desc">Pega el código fuente de cualquier web y Scout detecta sector, CMS, problemas SEO, chatbot, WhatsApp, Google Maps y más de 20 indicadores comerciales.</div>
+        <span class="feat-tag">Detección 3 capas</span>
+      </div>
+      <div class="feat-card">
+        <div class="feat-ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+        <div class="feat-title">Generador de webs demo</div>
+        <div class="feat-desc">Genera una web demo completamente personalizada con el nombre, teléfono y servicios reales del negocio. 9 sectores con diseños específicos. Descarga instantánea.</div>
+        <span class="feat-tag">Sin API · Instantáneo</span>
+      </div>
+      <div class="feat-card">
+        <div class="feat-ico"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+        <div class="feat-title">Propuestas y pitches</div>
+        <div class="feat-desc">Scripts de llamada, pitch de venta, email de seguimiento y propuesta comercial generados automáticamente con los datos reales del prospecto.</div>
+        <span class="feat-tag">4 formatos exportables</span>
+      </div>
+      <div class="feat-card">
+        <div class="feat-ico"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+        <div class="feat-title">Ficha de visita imprimible</div>
+        <div class="feat-desc">Genera un PDF listo para imprimir antes de cada visita comercial. Incluye diagnóstico, argumentos de venta por sector y objeciones con respuestas preparadas.</div>
+        <span class="feat-tag">PDF imprimible</span>
+      </div>
+      <div class="feat-card">
+        <div class="feat-ico"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+        <div class="feat-title">Dashboard MRR en tiempo real</div>
+        <div class="feat-desc">Gestiona clientes, controla el MRR mensual, proyección a 12 meses, desglose por packs y calculadora de cuántos clientes necesitas para alcanzar tu objetivo.</div>
+        <span class="feat-tag">Persistido en Supabase</span>
+      </div>
+      <div class="feat-card">
+        <div class="feat-ico"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <div class="feat-title">Calculadora ROI interactiva</div>
+        <div class="feat-desc">Muestra al cliente en tiempo real cuánto dinero está perdiendo sin IA. Ticket medio, conversión actual vs con chatbot, payback y ROI mensual. Brutal para cerrar.</div>
+        <span class="feat-tag">Argumento de venta visual</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" style="background:var(--bg1)">
+  <div class="container">
+    <div class="section-label">Proceso</div>
+    <h2 class="section-title">De prospecto a cliente<br>en <span class="grad">menos de 5 minutos</span></h2>
+
+    <div class="how-grid">
+      <div class="how-step">
+        <div class="how-num">1</div>
+        <div class="how-title">Ctrl+U en la web</div>
+        <div class="how-desc">Abre la web del negocio, copia el código fuente y pégalo en Scout. Nada más.</div>
+      </div>
+      <div class="how-step">
+        <div class="how-num">2</div>
+        <div class="how-title">Análisis automático</div>
+        <div class="how-desc">Scout detecta sector, problemas, oportunidades de venta y genera todos los materiales.</div>
+      </div>
+      <div class="how-step">
+        <div class="how-num">3</div>
+        <div class="how-title">Genera la demo</div>
+        <div class="how-desc">Un clic y se descarga una web demo con el nombre y datos reales del negocio.</div>
+      </div>
+      <div class="how-step">
+        <div class="how-num">4</div>
+        <div class="how-title">Cierra la venta</div>
+        <div class="how-desc">Enseñas la demo, usas el ROI calculado y envías la propuesta por WhatsApp desde Scout.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANS -->
+<section id="plans">
+  <div class="container">
+    <div class="section-label">Planes</div>
+    <h2 class="section-title">Elige tu plan.<br><span class="grad">Empieza a cerrar hoy.</span></h2>
+    <p class="section-sub">Acceso por invitación. Sin permanencia. Cancela cuando quieras.</p>
+
+    <div class="plans-grid">
+
+      <!-- SCOUT -->
+      <div class="plan-card">
+        <div class="plan-name-row"><span class="plan-ico"><svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:var(--accent);fill:none;stroke-width:1.6"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span><span class="plan-name">Scout</span></div>
+        <div class="plan-desc">Para freelancers y agencias pequeñas que quieren prospectar con IA.</div>
+        <div class="plan-price">
+          <div class="plan-amount">199€<span>/mes</span></div>
+          <div class="plan-period">Sin permanencia · Cancela cuando quieras</div>
+        </div>
+        <div class="plan-features">
+          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>1-2 usuarios</div>
+          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Análisis HTML ilimitados</div>
+          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>9 plantillas web demo</div>
+          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Propuestas y scripts</div>
+          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Pipeline de prospectos</div>
+          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Dashboard MRR</div>
+          <div class="plan-feat muted"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Soporte WhatsApp prioritario</div>
+          <div class="plan-feat muted"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>White label</div>
+        </div>
+        <button class="plan-btn plan-btn-ghost" onclick="window.open('https://wa.me/34643199580?text=Hola+Cris%2C+me+interesa+el+Plan+Scout+de+WhiteMoon+Scout+199€%2Fmes','_blank')">Solicitar acceso</button>
+      </div>
+
+      <!-- AGENCY -->
+      <div class="plan-card featured">
+        <div class="plan-popular">⭐ MÁS POPULAR</div>
+        <div class="plan-name-row"><span class="plan-ico"><svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:var(--accent);fill:none;stroke-width:1.6"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></span><span class="plan-name">Agency</span></div>
+        <div class="plan-desc">Para agencias en crecimiento con equipo comercial que quieren escalar ventas.</div>
+        <div class="plan-price">
+          <div class="plan-amount">399€<span>/mes</span></div>
+          <div class="plan-period">Sin permanencia · Cancela cuando quieras</div>
+        </div>
+        <div class="plan-features">
+          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Hasta 5 usuarios</div>
+          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Análisis HTML ilimitados</div>
+          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>9 plantillas web demo</div>
+          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Propuestas y scripts</div>
+          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Pipeline de prospectos</div>
+          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Dashboard MRR + comisiones</div>
+          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Soporte WhatsApp prioritario</div>
+          <div class="plan-feat muted"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>White label</div>
+        </div>
+        <button class="plan-btn plan-btn-primary" onclick="window.open('https://wa.me/34643199580?text=Hola+Cris%2C+me+interesa+el+Plan+Agency+de+WhiteMoon+Scout+399€%2Fmes','_blank')">Solicitar acceso →</button>
+      </div>
+
+      <!-- ENTERPRISE -->
+      <div class="plan-card">
+        <div class="plan-name-row"><span class="plan-ico"><svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:var(--accent);fill:none;stroke-width:1.6"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span><span class="plan-name">Enterprise</span></div>
+        <div class="plan-desc">White label completo. Tu marca, tus clientes, posibilidad de revender servicios WhiteMoon.</div>
+        <div class="plan-price">
+          <div class="plan-amount">699€<span>/mes</span></div>
+          <div class="plan-period">Sin permanencia · Cancela cuando quieras</div>
+        </div>
+        <div class="plan-features">
+          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Usuarios ilimitados</div>
+          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Análisis HTML ilimitados</div>
+          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Plantillas personalizadas</div>
+          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Todo el plan Agency</div>
+          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>White label (tu marca)</div>
+          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Reventa servicios WhiteMoon</div>
+          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Comisión por cierres derivados</div>
+          <div class="plan-feat"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Soporte directo WhiteMoon</div>
+        </div>
+        <button class="plan-btn plan-btn-ghost" onclick="window.open('https://wa.me/34643199580?text=Hola+Cris%2C+me+interesa+el+Plan+Enterprise+de+WhiteMoon+Scout+699€%2Fmes','_blank')">Contactar WhiteMoon</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-box">
+      <h2 class="cta-title">¿Listo para cerrar<br>más ventas con IA?</h2>
+      <p class="cta-sub">Acceso por invitación. Escríbenos por WhatsApp y te damos acceso en menos de 24h.</p>
+      <div class="cta-actions">
+        <a href="https://wa.me/34643199580?text=Hola+Cris%2C+quiero+acceso+a+WhiteMoon+Scout" target="_blank" class="btn-primary">
+          <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+          Solicitar acceso por WhatsApp
+        </a>
+        <a href="https://scout.whitemoon.es/" target="_blank" class="btn-secondary">Ver demo en vivo</a>
+      </div>
+      <div class="cta-note">Sin permanencia · <span>Acceso en menos de 24h</span> · Soporte directo WhiteMoon</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo"><span>White</span>Moon Scout</div>
+    <div class="footer-links">
+      <a href="#features">Funciones</a>
+      <a href="#plans">Planes</a>
+      <a href="https://whitemoon.es" target="_blank">WhiteMoon.es</a>
+      <a href="https://wa.me/34643199580" target="_blank">Contacto</a>
+    </div>
+    <div class="footer-copy">© 2026 WhiteMoon · Majadahonda, Madrid</div>
+  </div>
+</footer>
+
+
+<!-- CHATBOT WIDGET -->
+<div id="chat-widget">
+  <!-- Toggle button -->
+  <div id="chat-toggle" onclick="toggleChat()">
+    <div id="chat-toggle-icon">
+      <svg id="ico-chat" viewBox="0 0 24 24" style="width:24px;height:24px;stroke:#fff;fill:none;stroke-width:1.8"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      <svg id="ico-close" viewBox="0 0 24 24" style="width:22px;height:22px;stroke:#fff;fill:none;stroke-width:2;display:none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </div>
+    <div id="chat-pulse"></div>
+    <div id="chat-tooltip">💬 ¿Tienes dudas sobre Scout?</div>
+  </div>
+
+  <!-- Modal -->
+  <div id="chat-modal">
+    <div id="chat-header">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div id="chat-avatar">W</div>
+        <div>
+          <div style="font-weight:700;font-size:.88rem;color:#fff">WhiteMoon Scout</div>
+          <div style="font-size:.65rem;color:rgba(255,255,255,.7);display:flex;align-items:center;gap:4px">
+            <span style="width:6px;height:6px;border-radius:50%;background:#22c55e;display:inline-block"></span>
+            Agente IA · En línea
+          </div>
+        </div>
+      </div>
+      <button onclick="toggleChat()" style="background:rgba(255,255,255,.15);border:none;border-radius:6px;padding:5px 8px;cursor:pointer;color:#fff;font-size:.8rem">✕</button>
+    </div>
+    <div id="chat-msgs"></div>
+    <div id="chat-input-row">
+      <input id="chat-input" type="text" placeholder="Escribe tu mensaje..." onkeydown="if(event.key==='Enter')chatSend()">
+      <button onclick="chatSend()" id="chat-send-btn">
+        <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:999;font-family:'Inter',sans-serif}
+#chat-toggle{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#6d28d9);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 28px rgba(139,92,246,.45);position:relative;transition:transform .25s}
+#chat-toggle:hover{transform:scale(1.08)}
+#chat-pulse{position:absolute;inset:-4px;border-radius:50%;border:2px solid rgba(139,92,246,.4);animation:chatpulse 2s infinite}
+@keyframes chatpulse{0%{transform:scale(1);opacity:1}100%{transform:scale(1.35);opacity:0}}
+#chat-tooltip{position:absolute;right:68px;top:50%;transform:translateY(-50%);background:#1a1a2e;border:1px solid rgba(139,92,246,.3);border-radius:10px;padding:7px 12px;font-size:.72rem;color:#e0e0f4;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s;box-shadow:0 4px 16px rgba(0,0,0,.4)}
+#chat-toggle:hover #chat-tooltip{opacity:1}
+
+#chat-modal{position:absolute;bottom:70px;right:0;width:340px;background:#07070f;border:1px solid rgba(139,92,246,.2);border-radius:16px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.7);display:none;flex-direction:column;max-height:520px}
+#chat-modal.open{display:flex;animation:slideUp .25s ease}
+@keyframes slideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+#chat-header{background:linear-gradient(135deg,#7c3aed,#5b21b6);padding:14px 16px;display:flex;align-items:center;justify-content:space-between}
+#chat-avatar{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.9rem;color:#fff;border:2px solid rgba(255,255,255,.3)}
+
+#chat-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px;max-height:320px}
+#chat-msgs::-webkit-scrollbar{width:3px}
+#chat-msgs::-webkit-scrollbar-thumb{background:rgba(139,92,246,.3)}
+
+.msg-bot-wrap{display:flex;flex-direction:column;align-items:flex-start}
+.msg-user-wrap{display:flex;flex-direction:column;align-items:flex-end}
+.msg-bot{background:#111120;border:1px solid rgba(139,92,246,.15);border-radius:14px 14px 14px 4px;padding:9px 13px;font-size:.78rem;color:#e0e0f4;line-height:1.55;max-width:88%}
+.msg-user{background:linear-gradient(135deg,#7c3aed,#5b21b6);border-radius:14px 14px 4px 14px;padding:9px 13px;font-size:.78rem;color:#fff;line-height:1.55;max-width:88%}
+.msg-typing{background:#111120;border:1px solid rgba(139,92,246,.15);border-radius:14px 14px 14px 4px;padding:10px 16px;display:flex;gap:4px;align-items:center}
+.dot{width:6px;height:6px;border-radius:50%;background:#8b5cf6;animation:dotbounce 1.2s infinite}
+.dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
+@keyframes dotbounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+
+.chat-btns{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+.chat-btn{font-size:.7rem;padding:5px 11px;border-radius:20px;background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.25);color:#a78bfa;cursor:pointer;transition:all .18s;font-family:'Inter',sans-serif}
+.chat-btn:hover{background:rgba(139,92,246,.18);color:#c4b5fd}
+
+.wa-send-btn{display:inline-flex;align-items:center;gap:7px;margin-top:8px;padding:9px 16px;background:linear-gradient(135deg,#25d366,#128c7e);border:none;border-radius:10px;color:#fff;font-size:.76rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s}
+.wa-send-btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+
+#chat-input-row{display:flex;gap:8px;padding:10px 12px;border-top:1px solid rgba(139,92,246,.12);background:#0a0a14}
+#chat-input{flex:1;background:#111120;border:1px solid rgba(139,92,246,.15);border-radius:22px;padding:8px 14px;font-size:.78rem;color:#e0e0f4;outline:none;font-family:'Inter',sans-serif}
+#chat-input:focus{border-color:rgba(139,92,246,.4)}
+#chat-input::placeholder{color:#4a4870}
+#chat-send-btn{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#5b21b6);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
+#chat-send-btn:hover{filter:brightness(1.15)}
+
+@media(max-width:600px){
+  #chat-modal{width:calc(100vw - 32px);right:-10px;bottom:72px}
+  #chat-widget{bottom:16px;right:16px}
+}
+</style>
+
+<script>
+// ── CHATBOT STATE ──
+var chatOpen=false,chatStep=0,chatName='',chatPhone='';
+
+function normalize(s){return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9 ]/g,' ')}
+
+function toggleChat(){
+  chatOpen=!chatOpen;
+  var modal=document.getElementById('chat-modal');
+  var icoChat=document.getElementById('ico-chat');
+  var icoClose=document.getElementById('ico-close');
+  if(chatOpen){
+    modal.classList.add('open');
+    icoChat.style.display='none';
+    icoClose.style.display='block';
+    if(!document.getElementById('chat-msgs').children.length) initChat();
+  } else {
+    modal.classList.remove('open');
+    icoChat.style.display='block';
+    icoClose.style.display='none';
+  }
+}
+
+function addMsg(txt,isUser){
+  var msgs=document.getElementById('chat-msgs');
+  var wrap=document.createElement('div');
+  wrap.className=isUser?'msg-user-wrap':'msg-bot-wrap';
+  var msg=document.createElement('div');
+  msg.className=isUser?'msg-user':'msg-bot';
+  msg.innerHTML=txt;
+  wrap.appendChild(msg);
+  msgs.appendChild(wrap);
+  msgs.scrollTop=msgs.scrollHeight;
+  return wrap;
+}
+
+function addBtns(options){
+  var msgs=document.getElementById('chat-msgs');
+  var wrap=document.createElement('div');
+  wrap.className='chat-btns';
+  wrap.id='chat-quick-btns';
+  options.forEach(function(opt){
+    var btn=document.createElement('button');
+    btn.className='chat-btn';
+    btn.textContent=opt;
+    btn.onclick=function(){
+      var existing=document.getElementById('chat-quick-btns');
+      if(existing)existing.remove();
+      addMsg(opt,true);
+      handleInput(opt);
+    };
+    wrap.appendChild(btn);
+  });
+  msgs.appendChild(wrap);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+function typing(cb,delay){
+  var msgs=document.getElementById('chat-msgs');
+  var wrap=document.createElement('div');
+  wrap.className='msg-bot-wrap';
+  var t=document.createElement('div');
+  t.className='msg-typing';
+  t.innerHTML='<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+  wrap.appendChild(t);
+  msgs.appendChild(wrap);
+  msgs.scrollTop=msgs.scrollHeight;
+  setTimeout(function(){wrap.remove();cb()},delay||900);
+}
+
+function initChat(){
+  setTimeout(function(){
+    typing(function(){
+      addMsg('¡Hola! 👋 Soy el asistente de <b>WhiteMoon Scout</b>.<br>¿En qué puedo ayudarte?',false);
+      setTimeout(function(){
+        addBtns(['💰 Ver planes y precios','⚡ Cómo funciona','🌐 Ver demo en vivo','🤔 Tengo dudas']);
+      },300);
+    },800);
+  },600);
+}
+
+function handleInput(msg){
+  var t=normalize(msg);
+  var existing=document.getElementById('chat-quick-btns');
+  if(existing)existing.remove();
+
+  // Captura nombre
+  if(chatStep===1){
+    chatName=msg.trim().split(' ')[0];
+    chatStep=2;
+    typing(function(){
+      addMsg('Perfecto '+chatName+' 😊 ¿Tu teléfono de contacto? Te llamamos en menos de 24h.',false);
+    },700);
+    return;
+  }
+
+  // Captura teléfono
+  if(chatStep===2){
+    var digits=msg.replace(/\D/g,'');
+    if(digits.length<9){
+      typing(function(){addMsg('Hmm, ese número no parece válido. ¿Me lo confirmas?',false)},700);
+      return;
+    }
+    chatPhone=digits;
+    chatStep=3;
+    typing(function(){
+      addMsg('¡Listo '+chatName+'! He anotado tu solicitud 🎉<br><br>Nuestro equipo te contactará en menos de 24h para darte acceso y resolver todas tus dudas.',false);
+      setTimeout(function(){
+        var msgs=document.getElementById('chat-msgs');
+        var wrap=document.createElement('div');
+        wrap.className='msg-bot-wrap';
+        var btn=document.createElement('button');
+        btn.className='wa-send-btn';
+        btn.innerHTML='<svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 0C5.373 0 0 5.373 0 12c0 2.123.556 4.112 1.528 5.837L.057 23.215c-.073.266.173.512.44.44l5.42-1.463A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.368l-.36-.214-3.716 1.003 1.02-3.617-.235-.373A9.818 9.818 0 0112 2.182c5.426 0 9.818 4.392 9.818 9.818 0 5.427-4.392 9.818-9.818 9.818z"/></svg>Escribir por WhatsApp';
+        btn.onclick=function(){window.open('https://wa.me/34643199580?text=Hola%2C+soy+'+encodeURIComponent(chatName)+'+('+chatPhone+')%2C+me+interesa+WhiteMoon+Scout','_blank')};
+        wrap.appendChild(btn);
+        msgs.appendChild(wrap);
+        msgs.scrollTop=msgs.scrollHeight;
+      },400);
+    },800);
+    return;
+  }
+
+  // Keywords
+  if(t.match(/precio|plan|cuanto|cuesta|scout|agency|enterprise|199|399|699/)){
+    typing(function(){
+      addMsg('Tenemos 3 planes:<br><br><b>Scout — 199€/mes</b> · 1-2 usuarios<br><b>Agency — 399€/mes</b> · hasta 5 usuarios ⭐<br><b>Enterprise — 699€/mes</b> · ilimitado + white label<br><br>Sin permanencia. Cancela cuando quieras.',false);
+      setTimeout(function(){addBtns(['🚀 Solicitar acceso','🤔 Más dudas'])},400);
+    },800);
+    return;
+  }
+
+  if(t.match(/demo|ver|funciona|como|que hace|que es/)){
+    typing(function(){
+      addMsg('Scout analiza la web de cualquier negocio en segundos, detecta sus carencias y genera:<br><br>✅ Web demo personalizada<br>✅ Script de llamada<br>✅ Propuesta comercial<br>✅ Calculadora ROI<br><br>Todo sin APIs externas. Instantáneo.',false);
+      setTimeout(function(){
+        var msgs=document.getElementById('chat-msgs');
+        var wrap=document.createElement('div');
+        wrap.className='msg-bot-wrap';
+        var btn=document.createElement('button');
+        btn.className='wa-send-btn';
+        btn.style.background='linear-gradient(135deg,#7c3aed,#5b21b6)';
+        btn.innerHTML='Ver demo en vivo →';
+        btn.onclick=function(){window.open('https://scout.whitemoon.es/','_blank')};
+        wrap.appendChild(btn);
+        msgs.appendChild(wrap);
+        msgs.scrollTop=msgs.scrollHeight;
+      },400);
+    },900);
+    return;
+  }
+
+  if(t.match(/acceso|solicitar|empezar|contratar|quiero|interesa/)){
+    chatStep=1;
+    typing(function(){
+      addMsg('¡Perfecto! Te damos acceso en menos de 24h 🚀<br>¿Me dices tu nombre?',false);
+    },700);
+    return;
+  }
+
+  if(t.match(/white label|marca blanca|reventa|enterprise|agencia grande/)){
+    typing(function(){
+      addMsg('El plan Enterprise incluye white label completo — tus clientes ven <b>tu marca</b>, no WhiteMoon.<br><br>También puedes revender nuestros servicios de chatbot con comisión. Es un canal de ventas externalizado.',false);
+      setTimeout(function(){addBtns(['💰 Ver precio Enterprise','🚀 Solicitar acceso'])},400);
+    },900);
+    return;
+  }
+
+  if(t.match(/usuario|equipo|comercial|cuantos/)){
+    typing(function(){
+      addMsg('Scout: 1-2 usuarios<br>Agency: hasta 5 usuarios<br>Enterprise: ilimitados<br><br>Cada usuario tiene su propio login y sus datos separados.',false);
+      setTimeout(function(){addBtns(['💰 Ver precios','🚀 Solicitar acceso'])},400);
+    },800);
+    return;
+  }
+
+  if(t.match(/soporte|ayuda|problema|contacto/)){
+    chatStep=1;
+    typing(function(){
+      addMsg('Claro, te ayudamos directamente 💪<br>¿Me dices tu nombre para ponernos en contacto?',false);
+    },700);
+    return;
+  }
+
+  // Fallback
+  typing(function(){
+    addMsg('Puedo ayudarte con información sobre planes, funciones o darte acceso a Scout.<br>¿Qué necesitas?',false);
+    setTimeout(function(){addBtns(['💰 Ver planes','⚡ Cómo funciona','🚀 Solicitar acceso'])},400);
+  },800);
+}
+
+function chatSend(){
+  var input=document.getElementById('chat-input');
+  var msg=input.value.trim();
+  if(!msg)return;
+  input.value='';
+  var existing=document.getElementById('chat-quick-btns');
+  if(existing)existing.remove();
+  addMsg(msg,true);
+  handleInput(msg);
+}
+
+// Auto-open after 8 seconds
+setTimeout(function(){
+  if(!chatOpen) toggleChat();
+},8000);
+</script>
+
+</body>
+</html>
